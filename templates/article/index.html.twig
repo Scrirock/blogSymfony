@@ -4,8 +4,34 @@
 
 {% block body %}
 
-    <h1>Listes des articles</h1>
+    <div id="listTitle">
+        <h1>Listes des articles</h1>
+        {% if (is_granted('ROLE_AUTHOR')) %}
+            <a href="{{ path('article_add') }}" title="Ajouter"><i class="fa-solid fa-plus"></i></a>
+        {% endif %}
+    </div>
 
-
+    <div id="articleContainer">
+        {% for article in articles %}
+            <div class="article">
+                <a href="{{ path('article_view', {slug: article.slug}) }}" class="articleTitle">
+                    <div class="animateArrow">
+                        <div class="arrow"></div>
+                        {{ article.title }}
+                    </div>
+                </a>
+                <div class="icon">
+                    {% if (is_granted('ROLE_AUTHOR')) %}
+                        <div class="hoverIcon" id="blue">
+                            <a href="{{ path('article_edit', {slug: article.slug}) }}"><i class="fa-solid fa-pencil"></i></a>
+                        </div>
+                        <div class="hoverIcon" id="red">
+                            <a href="{{ path('article_del', {slug: article.slug}) }}"><i class="fa-solid fa-trash-can"></i></a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
 {% endblock %}

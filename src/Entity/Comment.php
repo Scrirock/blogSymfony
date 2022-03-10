@@ -19,6 +19,9 @@ class Comment {
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments')]
     private ?User $author;
 
+    #[ORM\ManyToOne(targetEntity: Article::class, inversedBy: 'comments')]
+    private ?Article $article;
+
     public function getId(): ?int {
         return $this->id;
     }
@@ -39,6 +42,16 @@ class Comment {
 
     public function setAuthor(?User $author): self {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getArticle(): ?Article {
+        return $this->article;
+    }
+
+    public function setArticle(?Article $article): self {
+        $this->article = $article;
 
         return $this;
     }

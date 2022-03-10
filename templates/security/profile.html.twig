@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+
+    <h1 id="profileName">{{ user.username }}</h1>
+
+    <a href="{{ path('logout') }}" id="logout">
+        <button class="button-48" role="button"><span class="text">Se déconnecter</span></button>
+    </a>
+
+{% endblock %}
