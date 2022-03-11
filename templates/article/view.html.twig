@@ -4,24 +4,35 @@
 
 {% block body %}
 
-    <h1>{{ article.title }}</h1>
+    <img src="{{ asset(article.cover) }}" alt="Article cover">
 
-    <div>{{ article.content }}</div>
+    <div id="container">
+        <h1 class="title">{{ article.title }}</h1>
+        <small>({{ article.author.username }})</small>
 
-    <h2>comment</h2>
+        <div id="content">{{ article.content }}</div>
 
-    {% if (article.comments) %}
-        {% for comment in article.comments %}
-            <p>{{ comment.author.username }}</p>
-            <div>{{ comment.content }}</div>
-        {% endfor %}
-    {% endif %}
+        <h2 class="title">Commentaires</h2>
 
-    {% if app.user %}
-        {{ form_start(addComment) }}
+        <div id="commentContainer">
+            {% if (article.comments) %}
+                {% for comment in article.comments %}
+                    <a href="{{ path('profile', {username: comment.author.username}) }}" class="author">{{ comment.author.username }}</a>
+                    <div class="relative">
+                        <div class="TopLeftCorner"></div>
+                        <div class="comment">{{ comment.content }}</div>
+                        <div class="BottomRightCorner"></div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        {% if app.user %}
+            {{ form_start(addComment) }}
             {{ form_rest(addComment) }}
             <input type="submit" value="Soumettre">
-        {{ form_end(addComment) }}
-    {% endif %}
+            {{ form_end(addComment) }}
+        {% endif %}
+    </div>
 
 {% endblock %}

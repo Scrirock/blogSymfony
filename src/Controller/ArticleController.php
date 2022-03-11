@@ -7,6 +7,7 @@ use App\Entity\Comment;
 use App\Entity\User;
 use App\Form\ArticleType;
 use App\Form\CommentType;
+use App\Service\ImagesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,40 +26,45 @@ class ArticleController extends AbstractController {
 
     #[Route('', name: 'list')]
     public function listArticle(): Response {
-        $articles = $this->manager->getRepository(Article::class)->findAll();
+        $articles = $this->manager->getRepository(Article::class)->findBy(['isDraft' => 0]);
 
         return $this->render('article/index.html.twig', [
-            'articles' => $articles
+            'articles' => $articles,
         ]);
     }
 
     #[Route('/view/{slug}', name: 'view')]
     public function viewArticle(Request $request, Article $article): Response {
-        $comment = New Comment();
+        if (!$article->getIsDraft()) {
+            $comment = New Comment();
 
-        $form = $this->createForm(CommentType::class, $comment);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var User $user */
-            $user = $this->getUser();
-            $comment->setAuthor($user);
-            $comment->setArticle($article);
+            $form = $this->createForm(CommentType::class, $comment);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                /** @var User $user */
+                $user = $this->getUser();
+                $comment->setAuthor($user);
+                $comment->setArticle($article);
 
-            $this->manager->persist($comment);
-            $this->manager->flush();
+                $this->manager->persist($comment);
+                $this->manager->flush();
 
-            return $this->redirectToRoute('article_view', ['slug' => $article->getSlug()]);
+                return $this->redirectToRoute('article_view', ['slug' => $article->getSlug()]);
+            }
+
+            return $this->render('article/view.html.twig', [
+                'article' => $article,
+                'addComment' => $form->createView(),
+            ]);
         }
-
-        return $this->render('article/view.html.twig', [
-            'article' => $article,
-            'addComment' => $form->createView(),
-        ]);
+        else {
+            return $this->redirectToRoute('article_list');
+        }
     }
 
     #[Route('/add', name: 'add')]
     #[IsGranted('ROLE_AUTHOR')]
-    public function addArticle(Request $request): Response {
+    public function addArticle(Request $request, ImagesService $imagesService): Response {
         $article = New Article();
 
         $form = $this->createForm(ArticleType::class, $article);
@@ -67,6 +73,20 @@ class ArticleController extends AbstractController {
             /** @var User $user */
             $user = $this->getUser();
             $article->setAuthor($user);
+            $article->setSlug(str_replace(" ", "-", strtolower($article->getTitle())));
+
+            //encode the cover image
+            $file = $form['cover']->getData();
+            if ($file) {
+                $ext = $file->guessExtension();
+                if (!$ext) {
+                    $ext = 'bin';
+                }
+                $article->setCover($imagesService->setCover($file));
+            }
+            else {
+                $article->setCover($imagesService->setCover());
+            }
 
             $this->manager->persist($article);
             $this->manager->flush();
@@ -82,10 +102,26 @@ class ArticleController extends AbstractController {
 
     #[Route('/edit/{slug}', name: 'edit')]
     #[IsGranted('ROLE_AUTHOR')]
-    public function editArticle(Request $request, Article $article): Response {
+    public function editArticle(Request $request, Article $article, ImagesService $imagesService): Response {
+        $cover = $article->getCover();
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+
+            //encode the cover image
+            $file = $form['cover']->getData();
+            if ($file) {
+                $ext = $file->guessExtension();
+                if (!$ext) {
+                    $ext = 'bin';
+                }
+                $article->setCover($imagesService->setCover($file));
+            }
+            else {
+                $article->setCover($cover);
+            }
+
+            $article->setSlug(str_replace(" ", "-", strtolower($article->getTitle())));
 
             $this->manager->flush();
 

@@ -10,6 +10,24 @@ Encore
     // directory where compiled assets will be stored
     .setOutputPath('public/build/')
     // public path used by the web server to access the output path
+    .copyFiles({
+        from: './assets/images/avatar',
+        to: 'images/avatar/[name].[ext]',
+        pattern: /\.(png|jpg|jpeg)$/
+    })
+    .copyFiles({
+        from: './assets/images/cover',
+        to: 'images/cover/[name].[ext]',
+        pattern: /\.(png|jpg|jpeg)$/
+    })
+    .copyFiles([
+        {from: './node_modules/ckeditor/', to: '../bundles/fosckeditor/[path][name].[ext]', pattern: /\.(js|css)$/, includeSubdirectories: false},
+        {from: './node_modules/ckeditor/adapters', to: '../bundles/fosckeditor/adapters/[path][name].[ext]'},
+        {from: './node_modules/ckeditor/lang', to: '../bundles/fosckeditor/lang/[path][name].[ext]'},
+        {from: './node_modules/ckeditor/plugins', to: '../bundles/fosckeditor/plugins/[path][name].[ext]'},
+        {from: './node_modules/ckeditor/skins', to: '../bundles/fosckeditor/skins/[path][name].[ext]'},
+        {from: './node_modules/ckeditor/vendor', to: '../bundles/fosckeditor/vendor/[path][name].[ext]'}
+    ])
     .setPublicPath('/build')
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')

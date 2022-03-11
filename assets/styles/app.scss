@@ -219,6 +219,10 @@ div.arrow {
 .animateArrow {
   width: 50rem;
   display: flex;
+
+  span {
+    border-bottom: 2px solid #3449ff;
+  }
 }
 
 .animateArrow:hover .arrow::after {
@@ -299,4 +303,68 @@ div.arrow {
 .button-48 span {
   z-index: 1;
   position: relative;
+}
+
+#container {
+  margin: 3rem;
+
+  .title {
+    margin-left: 5rem;
+    display: inline-block;
+  }
+
+  #content {
+    border-left: 5px solid #3449ff;
+    padding: 0 1.5rem;
+    margin: 2rem 8.5rem;
+  }
+
+  #commentContainer {
+    margin: 2rem 10rem;
+    width: 75%;
+  }
+
+  .author {
+    color: #3449ff;
+    font-style: italic;
+    font-size: 1.8rem;
+    text-decoration: none;
+  }
+
+  .comment {
+    width: fit-content;
+    margin: 1rem 2rem;
+  }
+
+  .relative {
+    position: relative;
+    width: fit-content;
+    margin: 2rem 1rem;
+  }
+
+  .TopLeftCorner {
+    width: 2rem;
+    height: 2rem;
+    position: absolute;
+    border-top: 1px solid #3449ff;
+    border-left: 1px solid #3449ff;
+    left: 1rem;
+    top: -0.5rem;
+  }
+
+  .BottomRightCorner {
+    width: 2rem;
+    height: 2rem;
+    position: absolute;
+    border-bottom: 1px solid #3449ff;
+    border-right: 1px solid #3449ff;
+    right: 1rem;
+    bottom: -0.5rem;
+  }
+
+  small {
+    font-size: 1.5rem;
+    color: #3449ff;
+    font-style: italic;
+  }
 }

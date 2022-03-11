@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use App\Security\UserAuthAuthenticator;
+use App\Service\ImagesService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,12 +32,27 @@ class RegistrationController extends AbstractController {
                              UserPasswordHasherInterface $userPasswordHasher,
                              UserAuthenticatorInterface $userAuthenticator,
                              UserAuthAuthenticator $authenticator,
-                             EntityManagerInterface $entityManager): Response {
+                             EntityManagerInterface $entityManager,
+                             ImagesService $imagesService ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            //encode the avatar
+            $file = $form['avatar']->getData();
+            if ($file) {
+                $ext = $file->guessExtension();
+                if (!$ext) {
+                    $ext = 'bin';
+                }
+                $user->setAvatar($imagesService->setAvatar($file));
+            }
+            else {
+                $user->setAvatar($imagesService->setAvatar());
+            }
+
             // encode the plain password
             $user->setPassword(
             $userPasswordHasher->hashPassword(

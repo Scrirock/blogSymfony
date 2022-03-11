@@ -6,6 +6,7 @@ use App\Repository\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article {
@@ -30,6 +31,12 @@ class Article {
 
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Comment::class)]
     private Collection $comments;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $cover;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isDraft;
 
     public function __construct() {
         $this->comments = new ArrayCollection();
@@ -102,6 +109,26 @@ class Article {
                 $comment->setArticle(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCover() {
+        return $this->cover;
+    }
+
+    public function setCover($cover): self {
+        $this->cover = $cover;
+
+        return $this;
+    }
+
+    public function getIsDraft(): ?bool {
+        return $this->isDraft;
+    }
+
+    public function setIsDraft(bool $isDraft): self {
+        $this->isDraft = $isDraft;
 
         return $this;
     }
