@@ -16,12 +16,12 @@
     <body>
 
         <nav>
-            <a href="{{ path('article_list') }}" class="linkButton">Articles</a>
+            <a href="{{ path('article_list') }}" class="linkButton">{{ "Articles"|trans }}</a>
             <a href="{{ path('login') }}" class="{% if not app.user %}large{% endif%} linkButton">
                 {% if app.user %}
-                    Profile
+                    {{ "Profile"|trans }}
                 {% else %}
-                    Connexion
+                    {{ "Sign in"|trans }}
                 {% endif %}
             </a>
         </nav>

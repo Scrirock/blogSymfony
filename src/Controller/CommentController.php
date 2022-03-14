@@ -19,12 +19,7 @@ class CommentController extends AbstractController {
         $this->manager = $manager;
     }
 
-    #[Route('/comment', name: 'app_comment')]
-    public function index(): Response {
-        return $this->render('comment/index.html.twig');
-    }
-
-    #[Route('/edit/{id}', name: 'edit')]
+    #[Route('/comment/edit/{id}', name: 'edit')]
     #[IsGranted('ROLE_MODERATOR')]
     public function editComment(Request $request, Comment $comment): Response {
         $form = $this->createForm(CommentType::class, $comment);
@@ -33,16 +28,16 @@ class CommentController extends AbstractController {
 
             $this->manager->flush();
 
-            return $this->redirectToRoute('app_comment');
+            return $this->redirectToRoute('article_list');
         }
 
         return $this->render('comment/form.html.twig', [
-            'action' => 'Modifier', //TODO traduire
+            'action' => 'Update',
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/del/{id}', name: 'view')]
+    #[Route('/comment/del/{id}', name: 'view')]
     #[IsGranted('ROLE_MODERATOR')]
     public function delComment(Comment $comment): Response {
         $this->manager->remove($comment);

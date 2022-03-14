@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ArticleController!{% endblock %}
+{% block title %}{{ "List of articles"|trans }}{% endblock %}
 
 {% block body %}
 
     <div id="listTitle">
-        <h1>Listes des articles</h1>
+        <h1>{{ "List of articles"|trans }}</h1>
         {% if (is_granted('ROLE_AUTHOR')) %}
-            <a href="{{ path('article_add') }}" title="Ajouter"><i class="fa-solid fa-plus"></i></a>
+            <a href="{{ path('article_add') }}" title="{{ "Add"|trans }}"><i class="fa-solid fa-plus"></i></a>
         {% endif %}
     </div>
 

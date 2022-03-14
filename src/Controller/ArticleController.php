@@ -25,8 +25,10 @@ class ArticleController extends AbstractController {
     }
 
     #[Route('', name: 'list')]
-    public function listArticle(): Response {
+    public function listArticle(Request $request): Response {
         $articles = $this->manager->getRepository(Article::class)->findBy(['isDraft' => 0]);
+
+        $request->setLocale('fr');
 
         return $this->render('article/index.html.twig', [
             'articles' => $articles,
@@ -95,7 +97,7 @@ class ArticleController extends AbstractController {
         }
 
         return $this->render('article/form.html.twig', [
-            'action' => 'Ajouter', //TODO traduire
+            'action' => 'Add',
             'form' => $form->createView(),
         ]);
     }
@@ -129,7 +131,7 @@ class ArticleController extends AbstractController {
         }
 
         return $this->render('article/form.html.twig', [
-            'action' => 'Modifier', //TODO traduire
+            'action' => 'Update',
             'form' => $form->createView(),
         ]);
     }

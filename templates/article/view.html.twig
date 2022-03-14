@@ -4,7 +4,7 @@
 
 {% block body %}
 
-    <img src="{{ asset(article.cover) }}" alt="Article cover">
+    <img src="{{ asset(article.cover) }}" alt="{{ "cover photo"|trans }}">
 
     <div id="container">
         <h1 class="title">{{ article.title }}</h1>
@@ -12,7 +12,7 @@
 
         <div id="content">{{ article.content }}</div>
 
-        <h2 class="title">Commentaires</h2>
+        <h2 class="title">{{ "Comments"|trans }}</h2>
 
         <div id="commentContainer">
             {% if (article.comments) %}

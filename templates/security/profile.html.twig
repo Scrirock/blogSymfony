@@ -7,7 +7,7 @@
     <h1 id="profileName">{{ user.username }}</h1>
 
     <a href="{{ path('logout') }}" id="logout">
-        <button class="button-48" role="button"><span class="text">Se déconnecter</span></button>
+        <button class="button-48" role="button"><span class="text">{{ "Log out"|trans }}</span></button>
     </a>
 
     <img src="{{ asset(user.avatar) }}" alt="profile picture">
